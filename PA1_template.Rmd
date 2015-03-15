@@ -10,7 +10,7 @@ output:
 The working directory was set, and the datafile was unzipped. The data was 
 loaded into R and stored as a data table using the data.table package.
 
-```{r, echo=TRUE}
+```{r Load-Preprocess, message=FALSE, echo=TRUE}
 setwd("F:/Data_Science_Coursera/Reproducible_Research/RepData_PeerAssessment1")
 ##unzip("activity.zip", exdir = ".")
 options(scipen=999)
@@ -27,7 +27,7 @@ print(act)
 
 ### 1. Histogram of the total number of steps taken each day
 
-```{r, echo=TRUE}
+```{r Total-Steps, message=FALSE, echo=TRUE}
 setkey(act, "date")
 totSteps <- act[, sum(steps, na.rm = TRUE), by = date]
 
@@ -36,7 +36,7 @@ hist(totSteps$V1, main = "Total number of steps taken each day", xlab = "Steps")
 
 ### 2. **Mean** and **median** total number of steps taken each day
 
-```{r, echo=TRUE}
+```{r Total-Estimates, message=FALSE, echo=TRUE}
 meanTotSteps <- mean(totSteps$V1)
 medTotSteps <- median(totSteps$V1)
 ```
@@ -50,7 +50,7 @@ and the median total number of steps taken each day is **`r medTotSteps`**.
 ### 1. Time series plot of the 5-minute interval and the average number of steps
 taken, averaged across all days
 
-```{r, echo=TRUE}
+```{r Steps-by-Int, message=FALSE, echo=TRUE}
 setkey(act, "interval")
 stepsbyInt <- act[, mean(steps, na.rm = TRUE), by = interval]
 plot(stepsbyInt, type = "l", xlab = "Interval", ylab = "Steps", main = 
@@ -59,7 +59,7 @@ plot(stepsbyInt, type = "l", xlab = "Interval", ylab = "Steps", main =
 
 ### 2. The 5-minute interval containing the maximum number of steps:
 
-```{r, echo=TRUE}
+```{r Steps-by-Int-max, message=FALSE, echo=TRUE}
 stepsbyInt[which(V1 == max(V1))]
 max <- stepsbyInt[which(V1 == max(V1))]$interval
 plot(stepsbyInt, type = "l", xlab = "Interval", ylab = "Steps", main = 
@@ -75,7 +75,7 @@ the `r max`-minute interval.
 
 ### 1. Total number of missing values in the dataset
 
-```{r, echo=TRUE}
+```{r Num-NAs, message=FALSE, echo=TRUE}
 nrow(act[which(is.na(steps)==TRUE)])
 ```
 
@@ -84,7 +84,7 @@ nrow(act[which(is.na(steps)==TRUE)])
 
 ### 3. New dataset prepared with values filled in as described above.
 
-```{r, echo=TRUE}
+```{r Imputed-data, message=FALSE, echo=TRUE}
 act2 <- act
 
 act2$steps <- as.numeric(act2$steps)
@@ -98,7 +98,7 @@ act2
 ### 4. Histogram of the total number of steps taken each day and **mean** and 
 **median** total number of steps taken each day using the new dataset.
 
-```{r, echo=TRUE}
+```{r Imputed-total-steps, message=FALSE, echo=TRUE}
 totSteps2 <- act2[, sum(steps, na.rm = TRUE), by = date]
 hist(totSteps2$V1, main = "Total number of steps taken each day (with missing 
      vals imputed)", xlab = "Steps")
@@ -121,7 +121,7 @@ distribution. The new distribution is also more symmetric.
 ### 1. A new factor variable was created with two levels: "weekday" and 
 "weekend", corresponding to a given date
 
-```{r, echo=TRUE}
+```{r Weekdays, message=FALSE, echo=TRUE}
 act2$day <- weekdays(as.POSIXlt(act$date))
 wkday <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
 wkend <- c("Saturday", "Sunday")
@@ -137,7 +137,7 @@ act2
 average number of steps taken, averaged across (1)all weekdays and 
 (2)all weekends
 
-```{r, echo=TRUE}
+```{r Plot-by-weekdays, message=FALSE, echo=TRUE}
 intMean <- act2[, mean(steps), by = "interval"]
 act2 <- merge(act2, intMean, by = "interval")
 
@@ -145,3 +145,5 @@ xyplot(V1 ~ interval | day, data = act2, type = "l", main = "Avg number of
        steps taken, across weekdays and weekends", xlab = "Interval", 
        ylab = "Steps")
 ```
+
+The max interval seems to be close to the same for both weekdays and weekends, but the overall total number of steps taken seems to be lower for weekends than weekdays.
