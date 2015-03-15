@@ -246,4 +246,4 @@ xyplot(V1 ~ interval | day, data = act3, type = "l", main = "Avg number of
 
 ![plot of chunk Plot-by-weekdays](figure/Plot-by-weekdays-1.png) 
 
-The max interval seems to be close to the same for both weekdays and weekends, but the overall total number of steps taken seems to be lower for weekends than weekdays.
+The max average number of steps per day seems to occur at the same interval for both weekdays and weekends, but the overall total number of steps taken seems to be lower for weekends than weekdays.
