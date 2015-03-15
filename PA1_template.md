@@ -13,7 +13,15 @@ loaded into R and stored as a data table using the data.table package.
 
 ```r
 setwd("F:/Data_Science_Coursera/Reproducible_Research/RepData_PeerAssessment1")
-##unzip("activity.zip", exdir = ".")
+unzip("activity.zip", exdir = ".")
+```
+
+```
+## Warning in unzip("activity.zip", exdir = "."): error 1 in extracting from
+## zip file
+```
+
+```r
 options(scipen=999)
 
 library(lattice)
@@ -67,8 +75,7 @@ and the median total number of steps taken each day is **10395**.
 
 ## What is the average daily activity pattern?
 
-### 1. Time series plot of the 5-minute interval and the average number of steps
-taken, averaged across all days
+### 1. Time series plot of the 5-minute interval and the average number of steps taken, averaged across all days
 
 
 ```r
@@ -118,8 +125,7 @@ nrow(act[which(is.na(steps)==TRUE)])
 ## [1] 2304
 ```
 
-### 2. Missing values will be replaced with the mean number of steps for that 
-5-minute interval.
+### 2. Missing values will be replaced with the mean number of steps for that 5-minute interval.
 
 ### 3. New dataset prepared with values filled in as described above.
 
@@ -150,8 +156,7 @@ act2
 ## 17568:     2355  1.075472 2012-11-30
 ```
 
-### 4. Histogram of the total number of steps taken each day and **mean** and 
-**median** total number of steps taken each day using the new dataset.
+### 4. Histogram of the total number of steps taken each day and **mean** and **median** total number of steps taken each day using the new dataset.
 
 
 ```r
@@ -167,9 +172,7 @@ meanTotSteps2 <- mean(totSteps2$V1)
 medTotSteps2 <- median(totSteps2$V1)
 ```
 
-After imputing missing values, the mean total number of steps taken each day is 
-**10766.19**, and the median total number of steps taken each 
-day is **10766.19**.
+After imputing missing values, the mean total number of steps taken each day is **10766.19**, and the median total number of steps taken each day is **10766.19**.
 
 The new estimates on the total number of steps taken each day are higher than 
 the original estimates which ignored missing values. Imputing values seems to 
@@ -178,8 +181,7 @@ distribution. The new distribution is also more symmetric.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-### 1. A new factor variable was created with two levels: "weekday" and 
-"weekend", corresponding to a given date
+### 1. A new factor variable was created with two levels: "weekday" and "weekend", corresponding to a given date
 
 
 ```r
@@ -209,9 +211,7 @@ act2
 ## 17568:     2355  1.075472 2012-11-30 weekday
 ```
 
-### 2. Panel plot containing a time series plot of the 5-minute interval and the
-average number of steps taken, averaged across (1)all weekdays and 
-(2)all weekends
+### 2. Panel plot containing a time series plot of the 5-minute interval and the average number of steps taken, averaged across (1)all weekdays and (2)all weekends
 
 
 ```r

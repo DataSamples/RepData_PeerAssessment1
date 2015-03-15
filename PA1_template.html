@@ -207,8 +207,14 @@ hr {
 loaded into R and stored as a data table using the data.table package.</p>
 
 <pre><code class="r">setwd(&quot;F:/Data_Science_Coursera/Reproducible_Research/RepData_PeerAssessment1&quot;)
-##unzip(&quot;activity.zip&quot;, exdir = &quot;.&quot;)
-options(scipen=999)
+unzip(&quot;activity.zip&quot;, exdir = &quot;.&quot;)
+</code></pre>
+
+<pre><code>## Warning in unzip(&quot;activity.zip&quot;, exdir = &quot;.&quot;): error 1 in extracting from
+## zip file
+</code></pre>
+
+<pre><code class="r">options(scipen=999)
 
 library(lattice)
 library(ggplot2)
@@ -255,9 +261,7 @@ and the median total number of steps taken each day is <strong>10395</strong>.</
 
 <h2>What is the average daily activity pattern?</h2>
 
-<h3>1. Time series plot of the 5-minute interval and the average number of steps</h3>
-
-<p>taken, averaged across all days</p>
+<h3>1. Time series plot of the 5-minute interval and the average number of steps taken, averaged across all days</h3>
 
 <pre><code class="r">setkey(act, &quot;interval&quot;)
 stepsbyInt &lt;- act[, mean(steps, na.rm = TRUE), by = interval]
@@ -297,9 +301,7 @@ the 835-minute interval.</p>
 <pre><code>## [1] 2304
 </code></pre>
 
-<h3>2. Missing values will be replaced with the mean number of steps for that</h3>
-
-<p>5-minute interval.</p>
+<h3>2. Missing values will be replaced with the mean number of steps for that 5-minute interval.</h3>
 
 <h3>3. New dataset prepared with values filled in as described above.</h3>
 
@@ -327,9 +329,7 @@ act2
 ## 17568:     2355  1.075472 2012-11-30
 </code></pre>
 
-<h3>4. Histogram of the total number of steps taken each day and <strong>mean</strong> and</h3>
-
-<p><strong>median</strong> total number of steps taken each day using the new dataset.</p>
+<h3>4. Histogram of the total number of steps taken each day and <strong>mean</strong> and <strong>median</strong> total number of steps taken each day using the new dataset.</h3>
 
 <pre><code class="r">totSteps2 &lt;- act2[, sum(steps, na.rm = TRUE), by = date]
 hist(totSteps2$V1, main = &quot;Total number of steps taken each day (with missing 
@@ -342,9 +342,7 @@ hist(totSteps2$V1, main = &quot;Total number of steps taken each day (with missi
 medTotSteps2 &lt;- median(totSteps2$V1)
 </code></pre>
 
-<p>After imputing missing values, the mean total number of steps taken each day is 
-<strong>10766.19</strong>, and the median total number of steps taken each 
-day is <strong>10766.19</strong>.</p>
+<p>After imputing missing values, the mean total number of steps taken each day is <strong>10766.19</strong>, and the median total number of steps taken each day is <strong>10766.19</strong>.</p>
 
 <p>The new estimates on the total number of steps taken each day are higher than 
 the original estimates which ignored missing values. Imputing values seems to 
@@ -353,9 +351,7 @@ distribution. The new distribution is also more symmetric.</p>
 
 <h2>Are there differences in activity patterns between weekdays and weekends?</h2>
 
-<h3>1. A new factor variable was created with two levels: &ldquo;weekday&rdquo; and</h3>
-
-<p>&ldquo;weekend&rdquo;, corresponding to a given date</p>
+<h3>1. A new factor variable was created with two levels: &ldquo;weekday&rdquo; and &ldquo;weekend&rdquo;, corresponding to a given date</h3>
 
 <pre><code class="r">act2$day &lt;- weekdays(as.POSIXlt(act$date))
 wkday &lt;- c(&quot;Monday&quot;, &quot;Tuesday&quot;, &quot;Wednesday&quot;, &quot;Thursday&quot;, &quot;Friday&quot;)
@@ -382,10 +378,7 @@ act2
 ## 17568:     2355  1.075472 2012-11-30 weekday
 </code></pre>
 
-<h3>2. Panel plot containing a time series plot of the 5-minute interval and the</h3>
-
-<p>average number of steps taken, averaged across (1)all weekdays and 
-(2)all weekends</p>
+<h3>2. Panel plot containing a time series plot of the 5-minute interval and the average number of steps taken, averaged across (1)all weekdays and (2)all weekends</h3>
 
 <pre><code class="r">wkdayMean &lt;- act2[which(day==&quot;weekday&quot;), mean(steps), by = &quot;interval&quot;]
 wkendMean &lt;- act2[which(day==&quot;weekend&quot;), mean(steps), by = &quot;interval&quot;]

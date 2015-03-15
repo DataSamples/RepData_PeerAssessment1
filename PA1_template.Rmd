@@ -12,7 +12,7 @@ loaded into R and stored as a data table using the data.table package.
 
 ```{r Load-Preprocess, message=FALSE, echo=TRUE}
 setwd("F:/Data_Science_Coursera/Reproducible_Research/RepData_PeerAssessment1")
-##unzip("activity.zip", exdir = ".")
+unzip("activity.zip", exdir = ".")
 options(scipen=999)
 
 library(lattice)
@@ -47,8 +47,7 @@ and the median total number of steps taken each day is **`r medTotSteps`**.
 
 ## What is the average daily activity pattern?
 
-### 1. Time series plot of the 5-minute interval and the average number of steps
-taken, averaged across all days
+### 1. Time series plot of the 5-minute interval and the average number of steps taken, averaged across all days
 
 ```{r Steps-by-Int, message=FALSE, echo=TRUE}
 setkey(act, "interval")
@@ -79,8 +78,7 @@ the `r max`-minute interval.
 nrow(act[which(is.na(steps)==TRUE)])
 ```
 
-### 2. Missing values will be replaced with the mean number of steps for that 
-5-minute interval.
+### 2. Missing values will be replaced with the mean number of steps for that 5-minute interval.
 
 ### 3. New dataset prepared with values filled in as described above.
 
@@ -95,8 +93,7 @@ act2$V1 <- NULL
 act2
 ```
 
-### 4. Histogram of the total number of steps taken each day and **mean** and 
-**median** total number of steps taken each day using the new dataset.
+### 4. Histogram of the total number of steps taken each day and **mean** and **median** total number of steps taken each day using the new dataset.
 
 ```{r Imputed-total-steps, message=FALSE, echo=TRUE}
 totSteps2 <- act2[, sum(steps, na.rm = TRUE), by = date]
@@ -107,9 +104,7 @@ meanTotSteps2 <- mean(totSteps2$V1)
 medTotSteps2 <- median(totSteps2$V1)
 ```
 
-After imputing missing values, the mean total number of steps taken each day is 
-**`r round(meanTotSteps2, 2)`**, and the median total number of steps taken each 
-day is **`r round(medTotSteps2, 2)`**.
+After imputing missing values, the mean total number of steps taken each day is **`r round(meanTotSteps2, 2)`**, and the median total number of steps taken each day is **`r round(medTotSteps2, 2)`**.
 
 The new estimates on the total number of steps taken each day are higher than 
 the original estimates which ignored missing values. Imputing values seems to 
@@ -118,8 +113,7 @@ distribution. The new distribution is also more symmetric.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-### 1. A new factor variable was created with two levels: "weekday" and 
-"weekend", corresponding to a given date
+### 1. A new factor variable was created with two levels: "weekday" and "weekend", corresponding to a given date
 
 ```{r Weekdays, message=FALSE, echo=TRUE}
 act2$day <- weekdays(as.POSIXlt(act$date))
@@ -133,9 +127,7 @@ act2$day <- as.factor(act2$day)
 act2
 ```
 
-### 2. Panel plot containing a time series plot of the 5-minute interval and the
-average number of steps taken, averaged across (1)all weekdays and 
-(2)all weekends
+### 2. Panel plot containing a time series plot of the 5-minute interval and the average number of steps taken, averaged across (1)all weekdays and (2)all weekends
 
 ```{r Plot-by-weekdays, message=FALSE, echo=TRUE}
 wkdayMean <- act2[which(day=="weekday"), mean(steps), by = "interval"]
