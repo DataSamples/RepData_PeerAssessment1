@@ -7,19 +7,141 @@ output:
 
 
 ## Loading and preprocessing the data
+The working directory was set, and the datafile was unzipped. The data was 
+loaded into R and stored as a data table using the data.table package.
 
+```{r, echo=TRUE}
+setwd("F:/Data_Science_Coursera/Reproducible_Research/RepData_PeerAssessment1")
+##unzip("activity.zip", exdir = ".")
+options(scipen=999)
 
+library(lattice)
+library(ggplot2)
+library(data.table)
+
+act <- data.table(read.csv("activity.csv"))
+print(act)
+```
 
 ## What is mean total number of steps taken per day?
 
+### 1. Histogram of the total number of steps taken each day
+
+```{r, echo=TRUE}
+setkey(act, "date")
+totSteps <- act[, sum(steps, na.rm = TRUE), by = date]
+
+hist(totSteps$V1, main = "Total number of steps taken each day", xlab = "Steps")
+```
+
+### 2. **Mean** and **median** total number of steps taken each day
+
+```{r, echo=TRUE}
+meanTotSteps <- mean(totSteps$V1)
+medTotSteps <- median(totSteps$V1)
+```
+
+The mean total number of steps taken each day is **`r round(meanTotSteps, 2)`**,
+and the median total number of steps taken each day is **`r medTotSteps`**.
 
 
 ## What is the average daily activity pattern?
 
+### 1. Time series plot of the 5-minute interval and the average number of steps
+taken, averaged across all days
+
+```{r, echo=TRUE}
+setkey(act, "interval")
+stepsbyInt <- act[, mean(steps, na.rm = TRUE), by = interval]
+plot(stepsbyInt, type = "l", xlab = "Interval", ylab = "Steps", main = 
+             "Avg steps taken each day (across all days) by 5-minute interval")
+```
+
+### 2. The 5-minute interval containing the maximum number of steps:
+
+```{r, echo=TRUE}
+stepsbyInt[which(V1 == max(V1))]
+max <- stepsbyInt[which(V1 == max(V1))]$interval
+plot(stepsbyInt, type = "l", xlab = "Interval", ylab = "Steps", main = 
+             "Avg steps taken each day (across all days) by 5-minute interval")
+abline(v = max, col = "red")
+```
+
+The maximum average number of steps taken across all days occurred at
+the `r max`-minute interval.
 
 
 ## Imputing missing values
 
+### 1. Total number of missing values in the dataset
 
+```{r, echo=TRUE}
+nrow(act[which(is.na(steps)==TRUE)])
+```
+
+### 2. Missing values will be replaced with the mean number of steps for that 
+5-minute interval.
+
+### 3. New dataset prepared with values filled in as described above.
+
+```{r, echo=TRUE}
+act2 <- act
+
+act2$steps <- as.numeric(act2$steps)
+act2 <- merge(act2, stepsbyInt, by = "interval")
+
+act2[which(is.na(steps) == TRUE)]$steps <- act2[which(is.na(steps) == TRUE)]$V1
+act2$V1 <- NULL
+act2
+```
+
+### 4. Histogram of the total number of steps taken each day and **mean** and 
+**median** total number of steps taken each day using the new dataset.
+
+```{r, echo=TRUE}
+totSteps2 <- act2[, sum(steps, na.rm = TRUE), by = date]
+hist(totSteps2$V1, main = "Total number of steps taken each day (with missing 
+     vals imputed)", xlab = "Steps")
+
+meanTotSteps2 <- mean(totSteps2$V1)
+medTotSteps2 <- median(totSteps2$V1)
+```
+
+After imputing missing values, the mean total number of steps taken each day is 
+**`r round(meanTotSteps2, 2)`**, and the median total number of steps taken each 
+day is **`r round(medTotSteps2, 2)`**.
+
+The new estimates on the total number of steps taken each day are higher than 
+the original estimates which ignored missing values. Imputing values seems to 
+have raised these estimates, while bringing them closer to the center of the 
+distribution. The new distribution is also more symmetric.
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+### 1. A new factor variable was created with two levels: "weekday" and 
+"weekend", corresponding to a given date
+
+```{r, echo=TRUE}
+act2$day <- weekdays(as.POSIXlt(act$date))
+wkday <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
+wkend <- c("Saturday", "Sunday")
+
+act2[day%in%wkday]$day <- "weekday"
+act2[day%in%wkend]$day <- "weekend"
+
+act2$day <- as.factor(act2$day)
+act2
+```
+
+### 2. Panel plot containing a time series plot of the 5-minute interval and the
+average number of steps taken, averaged across (1)all weekdays and 
+(2)all weekends
+
+```{r, echo=TRUE}
+intMean <- act2[, mean(steps), by = "interval"]
+act2 <- merge(act2, intMean, by = "interval")
+
+xyplot(V1 ~ interval | day, data = act2, type = "l", main = "Avg number of 
+       steps taken, across weekdays and weekends", xlab = "Interval", 
+       ylab = "Steps")
+```
