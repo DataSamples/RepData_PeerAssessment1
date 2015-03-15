@@ -138,10 +138,14 @@ average number of steps taken, averaged across (1)all weekdays and
 (2)all weekends
 
 ```{r Plot-by-weekdays, message=FALSE, echo=TRUE}
-intMean <- act2[, mean(steps), by = "interval"]
-act2 <- merge(act2, intMean, by = "interval")
+wkdayMean <- act2[which(day=="weekday"), mean(steps), by = "interval"]
+wkendMean <- act2[which(day=="weekend"), mean(steps), by = "interval"]
+wkdayTable <- merge(act2[which(day=="weekday")], wkdayMean, by = "interval")
+wkendTable <- merge(act2[which(day=="weekend")], wkendMean, by = "interval")
+act3 <- rbind(wkdayTable, wkendTable)
+act3
 
-xyplot(V1 ~ interval | day, data = act2, type = "l", main = "Avg number of 
+xyplot(V1 ~ interval | day, data = x, type = "l", main = "Avg number of 
        steps taken, across weekdays and weekends", xlab = "Interval", 
        ylab = "Steps")
 ```

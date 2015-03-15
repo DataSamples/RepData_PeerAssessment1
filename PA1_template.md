@@ -215,10 +215,31 @@ average number of steps taken, averaged across (1)all weekdays and
 
 
 ```r
-intMean <- act2[, mean(steps), by = "interval"]
-act2 <- merge(act2, intMean, by = "interval")
+wkdayMean <- act2[which(day=="weekday"), mean(steps), by = "interval"]
+wkendMean <- act2[which(day=="weekend"), mean(steps), by = "interval"]
+wkdayTable <- merge(act2[which(day=="weekday")], wkdayMean, by = "interval")
+wkendTable <- merge(act2[which(day=="weekend")], wkendMean, by = "interval")
+act3 <- rbind(wkdayTable, wkendTable)
+act3
+```
 
-xyplot(V1 ~ interval | day, data = act2, type = "l", main = "Avg number of 
+```
+##        interval     steps       date     day       V1
+##     1:        0  1.716981 2012-10-01 weekday 2.251153
+##     2:        0  0.000000 2012-10-02 weekday 2.251153
+##     3:        0  0.000000 2012-10-03 weekday 2.251153
+##     4:        0 47.000000 2012-10-04 weekday 2.251153
+##     5:        0  0.000000 2012-10-05 weekday 2.251153
+##    ---                                               
+## 17564:     2355  0.000000 2012-11-11 weekend 0.134434
+## 17565:     2355  0.000000 2012-11-17 weekend 0.134434
+## 17566:     2355  0.000000 2012-11-18 weekend 0.134434
+## 17567:     2355  0.000000 2012-11-24 weekend 0.134434
+## 17568:     2355  0.000000 2012-11-25 weekend 0.134434
+```
+
+```r
+xyplot(V1 ~ interval | day, data = x, type = "l", main = "Avg number of 
        steps taken, across weekdays and weekends", xlab = "Interval", 
        ylab = "Steps")
 ```
