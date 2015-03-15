@@ -239,7 +239,7 @@ act3
 ```
 
 ```r
-xyplot(V1 ~ interval | day, data = x, type = "l", main = "Avg number of 
+xyplot(V1 ~ interval | day, data = act3, type = "l", main = "Avg number of 
        steps taken, across weekdays and weekends", xlab = "Interval", 
        ylab = "Steps")
 ```
