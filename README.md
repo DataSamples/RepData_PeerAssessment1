@@ -1,3 +1,5 @@
+The below README was prepared by Prof. Peng at Johns Hopkins University, for the Coursera course on Reproducible Research, as part of the Data Science Specialization. The README as written below provides the instructions for the assignment. The markdown file (.md) in the repository contains the report which was submitted.
+
 ## Introduction
 
 It is now possible to collect a large amount of data about personal
